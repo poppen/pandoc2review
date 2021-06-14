@@ -37,6 +37,10 @@ class Pandoc2ReVIEW
         args += ["--shift-heading-level-by=#{@heading}"]
       end
 
+      if @stripcomments
+        args += ['--strip-comments']
+      end
+
       args.push(file)
 
       stdout, stderr, status = Open3.capture3(*args)
@@ -53,6 +57,7 @@ class Pandoc2ReVIEW
     @disableeaw = nil
     @hideraw = nil
     @stripemptydev = nil
+    @stripcomments = nil
     opts = OptionParser.new
     opts.banner = 'Usage: pandoc2review [option] file [file ...]'
     opts.version = '1.4'
@@ -72,6 +77,9 @@ class Pandoc2ReVIEW
     end
     opts.on('--strip-emptydev', "Strip <div> without any id or class") do
       @stripemptydev = true
+    end
+    opts.on('--strip-comments', "Strip out HTML comments.") do
+      @stripcomments = true
     end
 
     opts.parse!(ARGV)
